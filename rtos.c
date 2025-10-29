@@ -963,7 +963,7 @@ void readKeys()
         {
             YELLOW_LED ^= 1;
             RED_LED = 1;
-        }+2w
+        }
         if ((buttons & 2) != 0)
         {
             post(flashReq);

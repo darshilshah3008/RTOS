@@ -4,7 +4,7 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/Users/darsh/Desktop/ccs/tools/compiler/ti-cgt-arm_20.2.4.LTS
+CG_TOOL_ROOT := C:/ti/ccs1220/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS
 
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
@@ -124,40 +124,27 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXE_OUTPUTS += \
-EE6314.out \
+RTOS.out \
 
 EXE_OUTPUTS__QUOTED += \
-"EE6314.out" \
-
-BIN_OUTPUTS += \
-EE6314.hex \
-
-BIN_OUTPUTS__QUOTED += \
-"EE6314.hex" \
+"RTOS.out" \
 
 
 # All Target
 all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
-	@$(MAKE) --no-print-directory -Onone "EE6314.out"
+	@$(MAKE) --no-print-directory -Onone "RTOS.out"
 
 # Tool invocations
-EE6314.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
+RTOS.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
-	@echo 'Invoking: ARM Linker'
-	"C:/Users/darsh/Desktop/ccs/tools/compiler/ti-cgt-arm_20.2.4.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=PART_TM4C123GH6PM -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"EE6314.map" --heap_size=0 --stack_size=4096 -i"C:/Users/darsh/Desktop/ccs/tools/compiler/ti-cgt-arm_20.2.4.LTS/lib" -i"C:/Users/darsh/Desktop/ccs/tools/compiler/ti-cgt-arm_20.2.4.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="EE6314_linkInfo.xml" --rom_model -o "EE6314.out" $(ORDERED_OBJS)
+	@echo 'Invoking: Arm Linker'
+	"C:/ti/ccs1220/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=PART_TM4C123GH6PM -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"RTOS.map" --heap_size=0 --stack_size=512 -i"C:/ti/ccs1220/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/lib" -i"C:/ti/ccs1220/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="RTOS_linkInfo.xml" --rom_model -o "RTOS.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
-	@echo ' '
-
-EE6314.hex: $(EXE_OUTPUTS)
-	@echo 'Building secondary target: "$@"'
-	@echo 'Invoking: ARM Hex Utility'
-	"C:/Users/darsh/Desktop/ccs/tools/compiler/ti-cgt-arm_20.2.4.LTS/bin/armhex" --diag_wrap=off -o "EE6314.hex" $(EXE_OUTPUTS__QUOTED)
-	@echo 'Finished building secondary target: "$@"'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
+	-$(RM) $(EXE_OUTPUTS__QUOTED)
 	-$(RM) "asm.obj" "rtos.obj" "tm4c123gh6pm_startup_ccs.obj" "uart0.obj" "wait.obj" 
 	-$(RM) "rtos.d" "tm4c123gh6pm_startup_ccs.d" "uart0.d" "wait.d" 
 	-$(RM) "asm.d" 
