@@ -25,7 +25,7 @@ CFLAGS := $(CPUFLAGS) -O0 -g3 -ffunction-sections -fdata-sections \
 
 
 # Linker flags (uses our CI linker script)
-LDFLAGS := $(CPUFLAGS) -Wl,--gc-sections -T ci/linker.ld -Wl,-Map=$(BUILD)/$(TARGET).map
+LDFLAGS := $(CPUFLAGS) -Wl,--gc-sections -T linker.ld -Wl,-Map=$(BUILD)/$(TARGET).map
 
 # Source files in repo root
 C_SRCS := \
@@ -55,7 +55,7 @@ $(BUILD)/%.o: $(ROOT)/%.c | $(BUILD)
 $(BUILD)/%.o: $(ROOT)/%.s | $(BUILD)
 	$(AS) $(CPUFLAGS) -c $< -o $@
 
-$(BUILD)/$(TARGET).elf: $(OBJS) ci/linker.ld | $(BUILD)
+$(BUILD)/$(TARGET).elf: $(OBJS) linker.ld | $(BUILD)
 	$(LD) $(OBJS) $(LDFLAGS) -o $@
 	$(SIZE) $@
 
