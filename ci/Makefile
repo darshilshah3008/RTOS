@@ -34,8 +34,7 @@ C_SRCS := \
   $(ROOT)/wait.c \
   $(ROOT)/tm4c123gh6pm_startup_ccs.c
 
-ASM_SRCS := \
-  $(ROOT)/asm.s
+ASM_SRCS := 
 
 INCLUDES := -I$(ROOT)
 CFLAGS += -include ci/ci_compat.h
