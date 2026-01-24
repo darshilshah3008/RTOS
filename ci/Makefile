@@ -22,7 +22,6 @@ CFLAGS := $(CPUFLAGS) -O0 -g3 -ffunction-sections -fdata-sections \
           -Wno-error \
           -Wno-unused-parameter -Wno-unused-variable -Wno-format -Wno-sign-compare \
           -Wno-builtin-declaration-mismatch -Wno-return-type
-CFLAGS += -D_delay_cycles(x)=__asm__\ volatile\(\"nop\"\)
 
 
 # Linker flags (uses our CI linker script)
@@ -39,6 +38,8 @@ ASM_SRCS := \
   $(ROOT)/asm.s
 
 INCLUDES := -I$(ROOT)
+CFLAGS += -include ci/ci_compat.h
+
 
 C_OBJS   := $(patsubst $(ROOT)/%.c,$(BUILD)/%.o,$(C_SRCS))
 ASM_OBJS := $(patsubst $(ROOT)/%.s,$(BUILD)/%.o,$(ASM_SRCS))
