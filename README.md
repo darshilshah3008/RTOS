@@ -21,6 +21,7 @@ It supports task scheduling, preemption, and task synchronization using **semaph
 
 ---
 
+
 ## 🧠 Kernel Capabilities
 
 ### Task Management
