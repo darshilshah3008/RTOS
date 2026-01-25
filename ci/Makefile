@@ -5,7 +5,6 @@ TARGET := rtos_ci
 BUILD  := build
 
 CC  := arm-none-eabi-gcc
-AS  := arm-none-eabi-gcc
 LD  := arm-none-eabi-gcc
 OBJCOPY := arm-none-eabi-objcopy
 SIZE := arm-none-eabi-size
@@ -16,51 +15,58 @@ ROOT := ..
 # MCU flags for TM4C123 (Cortex-M4F with FPU)
 CPUFLAGS := -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 
-# Common compile flags
+# Compile flags (CI-friendly)
 CFLAGS := $(CPUFLAGS) -O0 -g3 -ffunction-sections -fdata-sections \
           -Wall -Wextra \
-          -Wno-error \
-          -Wno-unused-parameter -Wno-unused-variable -Wno-format -Wno-sign-compare \
-          -Wno-builtin-declaration-mismatch -Wno-return-type
+          -Wno-error -Wno-unused-parameter -Wno-unused-variable -Wno-format \
+          -Wno-sign-compare -Wno-builtin-declaration-mismatch -Wno-return-type
 
+INCLUDES := -I$(ROOT)
 
-# Linker flags (uses our CI linker script)
+# Include CI compatibility header automatically
+CFLAGS += -include ci_compat.h
+
+# Linker flags (we are already in ci/, so linker.ld is local)
 LDFLAGS := $(CPUFLAGS) -Wl,--gc-sections -T linker.ld -Wl,-Map=$(BUILD)/$(TARGET).map
 
-# Source files in repo root
+# Source files:
+# - main sources are in repo root (..)
+# - stubs/startup/syscalls are in this ci/ folder
 C_SRCS := \
   $(ROOT)/rtos.c \
   $(ROOT)/uart0.c \
   $(ROOT)/wait.c \
-  startup_ci.c
-  asm_stubs.c
+  startup_ci.c \
+  asm_stubs.c \
   syscalls.c
 
-ASM_SRCS := 
-
-INCLUDES := -I$(ROOT)
-CFLAGS += -include ci/ci_compat.h
-
-
-C_OBJS   := $(patsubst $(ROOT)/%.c,$(BUILD)/%.o,$(C_SRCS))
-ASM_OBJS := $(patsubst $(ROOT)/%.s,$(BUILD)/%.o,$(ASM_SRCS))
-OBJS := $(C_OBJS) $(ASM_OBJS)
+C_OBJS := \
+  $(BUILD)/rtos.o \
+  $(BUILD)/uart0.o \
+  $(BUILD)/wait.o \
+  $(BUILD)/startup_ci.o \
+  $(BUILD)/asm_stubs.o \
+  $(BUILD)/syscalls.o
 
 all: $(BUILD)/$(TARGET).elf $(BUILD)/$(TARGET).bin
 
 $(BUILD):
 	mkdir -p $(BUILD)
 
+# Compile root C files (../*.c)
 $(BUILD)/%.o: $(ROOT)/%.c | $(BUILD)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(BUILD)/%.o: $(ROOT)/%.s | $(BUILD)
-	$(AS) $(CPUFLAGS) -c $< -o $@
+# Compile ci-local C files (*.c)
+$(BUILD)/%.o: %.c | $(BUILD)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(BUILD)/$(TARGET).elf: $(OBJS) linker.ld | $(BUILD)
-	$(LD) $(OBJS) $(LDFLAGS) -o $@
+# Link
+$(BUILD)/$(TARGET).elf: $(C_OBJS) linker.ld | $(BUILD)
+	$(LD) $(C_OBJS) $(LDFLAGS) -o $@
 	$(SIZE) $@
 
+# Create binary
 $(BUILD)/$(TARGET).bin: $(BUILD)/$(TARGET).elf | $(BUILD)
 	$(OBJCOPY) -O binary $< $@
 
