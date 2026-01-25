@@ -1,5 +1,4 @@
-/* Minimal CI linker script for TM4C123GH6PM-like memory layout */
-
+/* CI linker script (simple + stable for GCC link proof) */
 ENTRY(ResetISR)
 
 MEMORY
@@ -16,23 +15,25 @@ SECTIONS
     KEEP(*(.intvecs))
     *(.text*)
     *(.rodata*)
+    *(.ARM.exidx*)
+    *(.ARM.extab*)
     KEEP(*(.init))
     KEEP(*(.fini))
+    _etext = .;
   } > FLASH
 
-  .ARM.exidx :
+  .data : AT(_etext)
   {
-    *(.ARM.exidx*)
-  } > FLASH
-
-  .data : AT (ADDR(.text) + SIZEOF(.text))
-  {
+    _sdata = .;
     *(.data*)
+    _edata = .;
   } > SRAM
 
   .bss :
   {
+    _sbss = .;
     *(.bss*)
     *(COMMON)
+    _ebss = .;
   } > SRAM
 }

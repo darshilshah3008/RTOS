@@ -33,6 +33,8 @@ C_SRCS := \
   $(ROOT)/uart0.c \
   $(ROOT)/wait.c \
   startup_ci.c
+  asm_stubs.c
+  syscalls.c
 
 ASM_SRCS := 
 
