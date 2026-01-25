@@ -19,7 +19,6 @@ It supports task scheduling, preemption, and task synchronization using **semaph
 
 > System concepts align with kernel operations such as scheduling, dispatching, blocking, ready/queued states, and semaphore wake-up queues.
 
-
 ---
 
 ## 🧠 Kernel Capabilities
