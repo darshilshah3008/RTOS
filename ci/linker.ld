@@ -35,5 +35,6 @@ SECTIONS
     *(.bss*)
     *(COMMON)
     _ebss = .;
+    _end = .;   /* heap starts here (needed for _sbrk) */
   } > SRAM
 }
