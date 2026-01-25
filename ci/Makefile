@@ -32,7 +32,7 @@ C_SRCS := \
   $(ROOT)/rtos.c \
   $(ROOT)/uart0.c \
   $(ROOT)/wait.c \
-  $(ROOT)/tm4c123gh6pm_startup_ccs.c
+  ci/startup_ci.c
 
 ASM_SRCS := 
 

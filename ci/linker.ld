@@ -13,6 +13,7 @@ SECTIONS
   .text :
   {
     KEEP(*(.isr_vector))
+    KEEP(*(.intvecs))
     *(.text*)
     *(.rodata*)
     KEEP(*(.init))
